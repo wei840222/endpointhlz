@@ -1,6 +1,7 @@
 *.exe*
 .DS_Store
 node_modules
+sqlite3.db
 /dist
 
 # local env files

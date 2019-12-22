@@ -15,7 +15,7 @@
             el-link(type="primary" :href="scope.row.url" target="_blank") {{ scope.row.url }}
         el-table-column(label='狀態碼' width='180' sortable)
           template(slot-scope="scope")
-            el-tag(size="medium" :type="getTagType(scope.row.status)") {{ scope.row.status === -1 ? 'unknow' : scope.row.status }}
+            el-tag(size="medium" :type="getTagType(scope.row.status)") {{ !scope.row.status || scope.row.status === -1 ? 'unknow' : scope.row.status }}
         el-table-column(label='更新時間')
           template(slot-scope="scope")
             i.el-icon-time
@@ -76,7 +76,7 @@ export default {
       this.endpoint = res.data;
     },
     getTagType(status) {
-      if (status === -1) {
+      if (!status || status === -1) {
         return "warning";
       } else if (status <= 299) {
         return "success";
