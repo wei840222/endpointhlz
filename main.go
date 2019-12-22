@@ -20,6 +20,8 @@ func main() {
 
 	app.Post("/api/endpoint", hero.Handler(ctrl.NewEndpointCtrl().InsertEndpoint))
 	app.Get("/api/endpoint", hero.Handler(ctrl.NewEndpointCtrl().GetAllEndpoint))
+	app.Put("/api/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().UpdateEndpointByID))
+	app.Delete("/api/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().DeleteEndpointByID))
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }

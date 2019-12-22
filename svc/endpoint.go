@@ -6,12 +6,12 @@ import (
 )
 
 type Endpoint struct {
-	ID        *int64 `xorm:"pk autoincr" json:"id"`
-	Name      string `xorm:"notnull" json:"name" validate:"required"`
-	URL       string `xorm:"notnull" json:"url" validate:"required"`
-	Status    *int   `xorm:"null" json:"status"`
-	CreatedAt int64  `xorm:"notnull created" json:"created_at"`
-	UpdatedAt int64  `xorm:"notnull updated" json:"updated_at"`
+	ID        *int64 `xorm:"pk autoincr 'id'" json:"id"`
+	Name      string `xorm:"notnull 'name'" json:"name" validate:"required"`
+	URL       string `xorm:"notnull 'url'" json:"url" validate:"required"`
+	Status    *int   `xorm:"null 'status'" json:"status,omitempty"`
+	CreatedAt int64  `xorm:"notnull created 'created_at'" json:"created_at"`
+	UpdatedAt int64  `xorm:"notnull updated 'updated_at'" json:"updated_at"`
 }
 
 type EndpointSVC struct {
@@ -46,7 +46,7 @@ func (svc *EndpointSVC) InsertEndpoint(e *Endpoint) error {
 }
 
 func (svc *EndpointSVC) GetAllEndpoint() ([]*Endpoint, error) {
-	var e []*Endpoint
+	e := make([]*Endpoint, 0)
 	if err := svc.db.Find(&e); err != nil {
 		return nil, err
 	}
