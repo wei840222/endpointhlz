@@ -6,7 +6,6 @@ import (
 
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/hero"
-
 	"github.com/kataras/iris/v12/middleware/logger"
 	"github.com/kataras/iris/v12/middleware/recover"
 )
@@ -16,12 +15,19 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	hero.Register(svc.NewEndpointSVC())
+	e := svc.NewEndpointSVC()
+	svc.NewHlzSVC(e).StartCronJob()
+	hero.Register(e)
 
-	app.Post("/api/endpoint", hero.Handler(ctrl.NewEndpointCtrl().InsertEndpoint))
-	app.Get("/api/endpoint", hero.Handler(ctrl.NewEndpointCtrl().GetAllEndpoint))
-	app.Put("/api/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().UpdateEndpointByID))
-	app.Delete("/api/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().DeleteEndpointByID))
+	app.HandleDir("/", "vue/dist")
+
+	api := app.Party("/api")
+	{
+		api.Post("/endpoint", hero.Handler(ctrl.NewEndpointCtrl().InsertEndpoint))
+		api.Get("/endpoint", hero.Handler(ctrl.NewEndpointCtrl().GetAllEndpoint))
+		api.Put("/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().UpdateEndpointByID))
+		api.Delete("/endpoint/{id:int64}", hero.Handler(ctrl.NewEndpointCtrl().DeleteEndpointByID))
+	}
 
 	app.Run(iris.Addr(":8080"), iris.WithoutServerError(iris.ErrServerClosed))
 }
